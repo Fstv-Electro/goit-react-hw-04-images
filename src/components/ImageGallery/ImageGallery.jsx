@@ -19,8 +19,8 @@ import css from './ImageGallery.module.css';
 
 
     useEffect(() => {
-        fetchLoad();
-        fetchLoadMore();
+        fetchLoad(inputValue, page);
+        fetchLoadMore(inputValue, page);
     }, [inputValue, page]);
 
     // componentDidUpdate(prevProps, prevState) {
@@ -28,18 +28,17 @@ import css from './ImageGallery.module.css';
     //     }
     // }
 
-    const fetchLoad = () => {
-        fetchQuery(inputValue, page).then(res => {
+    const fetchLoad = (value, searchPage) => {
+        fetchQuery(value, searchPage).then(res => {
             setImage(res.hits);
             setStatus('resolve');
             setStatusBtn(page < Math.ceil(res.totalHits / 12));
         }).catch(error => setStatus('rejected'));
     };
 
-    const fetchLoadMore = () => {
-
-        fetchQuery(inputValue, page).then(res => {
-            setImage(prevState => [...prevState.images, ...res.hits]);
+    const fetchLoadMore = (value, searchPage) => {
+        fetchQuery(value, searchPage).then(res => {
+            setImage(prevState => [...prevState, ...res.hits]);
             setStatus('resolve');
             setStatusBtn(page < Math.ceil(res.totalHits / 12));
         }).catch(error => setStatus('rejected'));
@@ -74,7 +73,7 @@ import css from './ImageGallery.module.css';
 
 ImageGallery.propTypes = {
     onClick: PropTypes.func.isRequired,
-    inputValue: PropTypes.string.isRequired,
+    inputValue: PropTypes.object.isRequired,
 };
 
 export default ImageGallery;

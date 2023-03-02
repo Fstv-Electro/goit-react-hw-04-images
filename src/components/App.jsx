@@ -16,7 +16,7 @@ const App = () => {
   
   
 
-  const getInputValue = handleValue => {
+  const getInputValue = (handleValue) => {
     setInputValue(handleValue);
     setPage(1);
   };
