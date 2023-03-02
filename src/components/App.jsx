@@ -1,47 +1,48 @@
-import React, { Component } from "react";
+import { useState } from "react";
 import ImageGallery from "./ImageGallery/ImageGallery";
 import Searchbar from "./Searchbar/Searchbar";
 import Modal from "./Modal/Modal";
 
 
-class App extends Component {
+const App = () => {
 
-  state = {
-    inputValue: '',
-    modalImg: '',
-    showModal: false,
-    page: 1,
+
+
+  const [inputValue, setInputValue] = useState({});
+  const [modalImg, setModalImg] = useState('');
+  const [showModal, setShowModal] = useState('');
+  const [page, setPage] = useState('');
+  
+  
+  
+
+  const getInputValue = handleValue => {
+    setInputValue(handleValue);
+    setPage(1);
   };
 
-  getInputValue = handleValue => {
-    this.setState({ inputValue: handleValue, page: 1 })
+  const toggleModal = () => {
+    setShowModal((showModal) => (!showModal))
   };
 
-  toggleModal = () => {
-    this.setState(({ showModal }) => ({ showModal: !showModal }))
+  const getLargeImg = url => {
+    toggleModal();
+    setModalImg(url);
   };
 
-  getLargeImg = url => {
-    this.toggleModal();
-    this.setState({ modalImg: url });
+  const LoadMoreBtn = () => {
+    setPage(prevState => prevState + 1);
   };
 
-  LoadMoreBtn = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
-  };
 
-  render() {
-    const { modalImg, showModal, page, } = this.state;
-    return (
-      <>
-        <Searchbar getInputValue={this.getInputValue}/>
-        <ImageGallery inputValue={this.state.inputValue} onClick={this.getLargeImg} LoadMoreBtn={this.LoadMoreBtn} page={ page} />
-        {showModal && <Modal url={modalImg} onClose={this.toggleModal} />}
-      </>
-    )
-  }
-}
+
+  return (
+    <>
+      <Searchbar getInputValue={getInputValue} />
+      <ImageGallery inputValue={inputValue} onClick={getLargeImg} LoadMoreBtn={LoadMoreBtn} page={page} />
+      {showModal && <Modal url={modalImg} onClose={toggleModal} />}
+    </>
+  )
+};
 
 export default App;
