@@ -7,13 +7,25 @@ import css from './ImageGallery.module.css';
 import { useState, useEffect } from 'react';
 
 
-export const ImageGallery = ({ inputValue, onClick, LoadMoreBtn, page }) => {
+export const ImageGallery = ({inputValue, onClick, LoadMoreBtn, page}) => {
 
     // state = {
     //     images: [],
     //     status: 'idle',
     //     statusBtn: true,
     // };
+
+    
+    // componentDidUpdate(prevProps, prevState) {
+    //     if (prevProps.inputValue !== this.props.inputValue) {
+    //         this.fetchLoad();
+    //     }
+
+    //     if (prevProps.page !== this.props.page && this.props.page > 1) {
+    //         this.fetchLoadMore();
+    //     }
+    // }
+
 
     const [images, setImages] = useState([]);
     const [status, setStatus] = useState('idle');
@@ -26,17 +38,8 @@ export const ImageGallery = ({ inputValue, onClick, LoadMoreBtn, page }) => {
         fetchLoad(inputValue, page);
     }, [inputValue, page]);
 
-    // componentDidUpdate(prevProps, prevState) {
-    //     if (prevProps.inputValue !== this.props.inputValue) {
-    //         this.fetchLoad();
-    //     }
-
-    //     if (prevProps.page !== this.props.page && this.props.page > 1) {
-    //         this.fetchLoadMore();
-    //     }
-    // }
-
     const fetchLoad = (inputValue, page) => {
+        reset()
         fetchQuery(inputValue, page).then(res => {
             setImages(res.hits);
             setStatus('resolve');
@@ -54,33 +57,39 @@ export const ImageGallery = ({ inputValue, onClick, LoadMoreBtn, page }) => {
         }).catch(error => setStatus('rejected'));
     };
 
-    if (status === 'pending') {
-        return <Loader />;
+    const reset = () => {
+        setImages([]);
+        setStatus('idle');
+        setStatusBtn(true);
     }
 
-    if (status === 'resolve') {
-        return (
-            <>
-                <ul className={css.gallery}>
-                    {images.map(({ id, largeImageURL, tags }) => (
-                        <ImageGalleryItem
-                            key={id}
-                            id={id}
-                            url={largeImageURL}
-                            tags={tags}
-                            alt={tags}
-                            onClick={onClick}
-                        />
-                    ))}
-                </ul>
-                {images.length !== 0 ? (
-                    statusBtn && <Button onClick={fetchLoadMore} />
-                ) : (
-                    alert('No result')
-                )}
-            </>
-        );
-    }
+        if (status === 'pending') {
+            return <Loader />;
+        }
+
+        if (status === 'resolve') {
+            return (
+                <>
+                    <ul className={css.gallery}>
+                        {images.map(({ id, largeImageURL, tags }) => (
+                            <ImageGalleryItem
+                                key={id}
+                                id={id}
+                                url={largeImageURL}
+                                tags={tags}
+                                alt={tags}
+                                onClick={onClick}
+                            />
+                        ))}
+                    </ul>
+                    {images.length !== 0 ? (
+                       statusBtn && <Button onClick={fetchLoadMore}/>
+                    ) : (
+                        alert('No result')
+                    )}
+                </>
+            );
+        }
 }
 
 ImageGallery.propTypes = {
