@@ -35,7 +35,7 @@ export const ImageGallery = ({inputValue, onClick, LoadMoreBtn, page}) => {
         if (!inputValue) {
             return;
         }
-        reset()
+        // reset()
         fetchQuery(inputValue, page).then(res => {
             setImages(res.hits);
             setStatus('resolve');
@@ -47,21 +47,21 @@ export const ImageGallery = ({inputValue, onClick, LoadMoreBtn, page}) => {
     // const fetchLoad = (inputValue) => {
     // };
 
-    const fetchLoadMore = e => {
-        e.preventDefault();
-        fetchQuery(inputValue, page).then(res => {
-            setImages([...images, ...res.hits]);
-            setStatus('resolve');
-            setStatusBtn(page < Math.ceil(res.totalHits / 12));
-            LoadMoreBtn();
-        }).catch(error => setStatus('rejected'));
-    };
+    // const fetchLoadMore = e => {
+    //     e.preventDefault();
+    //     fetchQuery(inputValue, page).then(res => {
+    //         setImages([...images, ...res.hits]);
+    //         setStatus('resolve');
+    //         setStatusBtn(page < Math.ceil(res.totalHits / 12));
+            
+    //     }).catch(error => setStatus('rejected'));
+    // };
 
-    const reset = () => {
-        setImages([]);
-        setStatus('idle');
-        setStatusBtn(true);
-    }
+    // const reset = () => {
+    //     setImages([]);
+    //     setStatus('idle');
+    //     setStatusBtn(true);
+    // }
 
         if (status === 'pending') {
             return <Loader />;
@@ -83,7 +83,7 @@ export const ImageGallery = ({inputValue, onClick, LoadMoreBtn, page}) => {
                         ))}
                     </ul>
                     {images.length !== 0 ? (
-                       statusBtn && <Button onClick={fetchLoadMore}/>
+                       statusBtn && <Button onClick={LoadMoreBtn}/>
                     ) : (
                         alert('No result')
                     )}
