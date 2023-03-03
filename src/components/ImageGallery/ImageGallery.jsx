@@ -5,10 +5,9 @@ import Loader from 'components/Loader/Loader';
 import Button from 'components/Button/Button';
 import css from './ImageGallery.module.css';
 import { useState, useEffect } from 'react';
-import { nanoid } from 'nanoid';
 
 
-export const ImageGallery = ({inputValue, onClick, LoadMoreBtn, page}) => {
+export const ImageGallery = ({ inputValue, onClick, LoadMoreBtn, page }) => {
 
     // state = {
     //     images: [],
@@ -55,33 +54,33 @@ export const ImageGallery = ({inputValue, onClick, LoadMoreBtn, page}) => {
         }).catch(error => setStatus('rejected'));
     };
 
-        if (status === 'pending') {
-            return <Loader />;
-        }
+    if (status === 'pending') {
+        return <Loader />;
+    }
 
-        if (status === 'resolve') {
-            return (
-                <>
-                    <ul className={css.gallery}>
-                        {images.map(({ id, largeImageURL, tags }) => (
-                            <ImageGalleryItem
-                                key={id}
-                                id={id}
-                                url={largeImageURL}
-                                tags={tags}
-                                alt={tags}
-                                onClick={onClick}
-                            />
-                        ))}
-                    </ul>
-                    {images.length !== 0 ? (
-                       statusBtn && <Button onClick={fetchLoadMore}/>
-                    ) : (
-                        alert('No result')
-                    )}
-                </>
-            );
-        }
+    if (status === 'resolve') {
+        return (
+            <>
+                <ul className={css.gallery}>
+                    {images.map(({ id, largeImageURL, tags }) => (
+                        <ImageGalleryItem
+                            key={id}
+                            id={id}
+                            url={largeImageURL}
+                            tags={tags}
+                            alt={tags}
+                            onClick={onClick}
+                        />
+                    ))}
+                </ul>
+                {images.length !== 0 ? (
+                    statusBtn && <Button onClick={fetchLoadMore} />
+                ) : (
+                    alert('No result')
+                )}
+            </>
+        );
+    }
 }
 
 ImageGallery.propTypes = {
