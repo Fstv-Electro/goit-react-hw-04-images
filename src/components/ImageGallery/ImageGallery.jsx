@@ -15,12 +15,18 @@ import css from './ImageGallery.module.css';
 
     const [images, setImage] = useState([]);
     const [status, setStatus] = useState('idle');
-    const [statusBtn, setStatusBtn] = useState(true);
+     const [statusBtn, setStatusBtn] = useState(true);
+     const [currentPage, setCurrentPage] = useState(1);
 
 
-    useEffect(() => {
-        fetchLoad(inputValue, page);
-        fetchLoadMore(inputValue, page);
+     useEffect(() => {
+         if (inputValue) {
+            fetchLoad();
+        }
+         if (currentPage !== page) {
+            fetchLoadMore();
+            setCurrentPage([prev => prev + 1]);
+        }
     }, [inputValue, page]);
 
     // componentDidUpdate(prevProps, prevState) {
