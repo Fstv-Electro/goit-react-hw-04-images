@@ -35,17 +35,17 @@ export const ImageGallery = ({inputValue, onClick, LoadMoreBtn, page}) => {
         if (!inputValue) {
             return;
         }
-        fetchLoad(inputValue, page);
-    }, [inputValue, page]);
-
-    const fetchLoad = (inputValue, page) => {
         reset()
         fetchQuery(inputValue, page).then(res => {
             setImages(res.hits);
             setStatus('resolve');
             setStatusBtn(page < Math.ceil(res.totalHits / 12));
         }).catch(error => setStatus('rejected'));
-    };
+
+    }, [inputValue, page]);
+
+    // const fetchLoad = (inputValue) => {
+    // };
 
     const fetchLoadMore = e => {
         e.preventDefault();
