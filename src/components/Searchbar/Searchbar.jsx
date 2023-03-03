@@ -1,27 +1,37 @@
-import PropTypes from 'prop-types';
+import { useState } from 'react';
 import css from './Searchbar.module.css';
 
-const Searchbar = ({ onSubmit }) => {
-    <header className={css.searchbar}>
-        <form className={css.form} onSubmit={onSubmit}>
-            <button type="submit" className={css.button}>
-                <span className={css.label}>Search</span>
-            </button>
+export const Searchbar = ({getInputValue}) => {
+    const [input, setInput] = useState('');
 
-            <input
-                name="inputForSearch"
-                className={css.input}
-                type="text"
-                autoComplete="off"
-                autoFocus
-                placeholder="Search images and photos"
-            />
-        </form>
-    </header>
-};
+    const search = e => {
+        e.preventDefault();
+        getInputValue(input);
+        setInput('');
+    };
 
-Searchbar.propTypes = {
-    onSubmit: PropTypes.func,
-};
+    const handleChange = e => {
+        setInput(e.target.value);
+    };
 
-export default Searchbar;
+    return (
+        <header className={css.searchbar}>
+            <form className={css.form} onSubmit={search}>
+                <button type="submit" className={css.button}>
+                    <span className={css.label}>Search</span>
+                </button>
+                
+                <input
+                    name="input"
+                    className={css.input}
+                    type="text"
+                    onChange={handleChange}
+                    value={input}
+                    autoComplete="off"
+                    autoFocus
+                    placeholder="Search images and photos"
+                />
+            </form>
+        </header>
+    );
+}

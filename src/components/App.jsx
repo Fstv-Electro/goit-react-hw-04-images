@@ -1,81 +1,39 @@
-import React, { useState, useEffect } from "react";
-import ImageGallery from "./ImageGallery/ImageGallery";
-import Searchbar from "./Searchbar/Searchbar";
-import Loader from "./Loader/Loader";
-import { Button } from "./Button/Button";
+import React, { useState } from "react";
+import { ImageGallery } from "./ImageGallery/ImageGallery";
+import { Searchbar } from "./Searchbar/Searchbar";
 import Modal from "./Modal/Modal";
-import { fetchQuery } from "API/Api";
 
 
+export const App = () => {
 
-const App = () => {
-  const [images, setImages] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [search, setSearch] = useState('');
-  const [pageNr, setPageNr] = useState(1);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [inputValue, setInputValue] = useState('');
   const [modalImg, setModalImg] = useState('');
-  const [modalAlt, setModalAlt] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [page, setPage] = useState(1);
 
-  const handleSubmit = async e => {
-    e.preventDefault();
-    setIsLoading({isLoading: true});
-    const inputForSearch = e.target.elements.inputForSearch;
-    if (inputForSearch.value.trim() === '') {
-      return;
-    }
-    const response = await fetchQuery(inputForSearch.value, 1);
-    setImages(response);
-    setIsLoading(false);
-    setSearch(inputForSearch.value);
-    setPageNr(2);
+  const getInputValue = handleValue => {
+    setInputValue(handleValue);
+    setPage(1);
   };
 
-  const onClickMore = async () => {
-    setIsLoading({isLoading: true});
-    const response = await fetchQuery(search, pageNr);
-    setImages([...images, ...response]);
-    setIsLoading(false);
-    setPageNr(pageNr + 1);
+  const toggleModal = () => {
+    setShowModal(!showModal);
   };
 
-  const onImgClick = e => {
-    setIsModalOpen(true);
-    setModalAlt(e.target.alt);
-    setModalImg(e.target.name);
+  const getLargeImg = url => {
+    toggleModal();
+    setModalImg(url);
   };
 
-  const onModalClose = () => {
-    setIsModalOpen(false);
-    setModalImg('');
-    setModalAlt('');
+  const LoadMoreBtn = () => {
+    setPage(page + 1);
   };
-
-  useEffect(() => {
-    const onKeyDown = e => {
-      if (e.code === 'Escape') {
-        onModalClose();
-      }
-    };
-    window.addEventListener('keydown', onKeyDown);
-  }, []);
 
   return (
     <>
-      {isLoading && (pageNr === 1) ? (<Loader />) : (
-        <React.Fragment>
-          <Searchbar onSubmit={handleSubmit} />
-          <ImageGallery onImgClick={onImgClick} images={images} />
-          
-          {isLoading && (pageNr >= 2) ? <Loader /> : null}
-          {images.length > 0 ? <Button onClick={onClickMore}/> : null }
-        </React.Fragment>
-      )}
-      {isModalOpen ? (
-        <Modal src={modalImg} alt={modalAlt} handleClose={onModalClose} />
-        ) : null}
+      <Searchbar getInputValue={getInputValue}/>
+      <ImageGallery inputValue={inputValue} onClick={getLargeImg} LoadMoreBtn={LoadMoreBtn} page={page} />
+      {showModal && <Modal url={modalImg} onClose={toggleModal} />}
     </>
   )
-};
-
-export default App;
+}
