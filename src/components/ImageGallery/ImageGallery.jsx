@@ -37,15 +37,12 @@ export const ImageGallery = ({inputValue, onClick, LoadMoreBtn, page}) => {
         }
         // reset()
         fetchQuery(inputValue, page).then(res => {
-            setImages(res.hits);
             setStatus('resolve');
             setStatusBtn(page < Math.ceil(res.totalHits / 12));
+            page > 1 ? setImages(prevImg => [...prevImg, ...res.hits]) : setImages(res.hits);  
         }).catch(error => setStatus('rejected'));
 
     }, [inputValue, page]);
-
-    // const fetchLoad = (inputValue) => {
-    // };
 
     // const fetchLoadMore = e => {
     //     e.preventDefault();
@@ -56,12 +53,6 @@ export const ImageGallery = ({inputValue, onClick, LoadMoreBtn, page}) => {
             
     //     }).catch(error => setStatus('rejected'));
     // };
-
-    // const reset = () => {
-    //     setImages([]);
-    //     setStatus('idle');
-    //     setStatusBtn(true);
-    // }
 
         if (status === 'pending') {
             return <Loader />;
